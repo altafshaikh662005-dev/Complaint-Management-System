@@ -28,7 +28,12 @@ pipeline {
         stage('Backend Tests') {
             steps {
                 dir('server') {
-                    bat 'npm test'
+                    withCredentials([string(
+                        credentialsId: 'complaint-jwt-secret',
+                        variable: 'JWT_SECRET'
+                    )]) {
+                        bat 'npm test'
+                    }
                 }
             }
         }
@@ -56,6 +61,7 @@ pipeline {
 docker build --tag complaint-management-backend:%APP_VERSION% --file server/Dockerfile server
 if errorlevel 1 exit /b 1
 docker build --build-arg VITE_API_URL=/api --tag complaint-management-frontend:%APP_VERSION% --file client/Dockerfile client
+if errorlevel 1 exit /b 1
 '''
             }
         }
@@ -94,6 +100,7 @@ if not errorlevel 1 (
     del "%MANIFEST_ERROR%" >NUL 2>&1
     exit /b 1
 )
+
 findstr /I /C:"no such manifest" /C:"manifest unknown" "%MANIFEST_ERROR%" >NUL
 if errorlevel 1 (
     type "%MANIFEST_ERROR%"
@@ -108,6 +115,7 @@ if not errorlevel 1 (
     del "%MANIFEST_ERROR%" >NUL 2>&1
     exit /b 1
 )
+
 findstr /I /C:"no such manifest" /C:"manifest unknown" "%MANIFEST_ERROR%" >NUL
 if errorlevel 1 (
     type "%MANIFEST_ERROR%"
@@ -115,14 +123,18 @@ if errorlevel 1 (
     del "%MANIFEST_ERROR%" >NUL 2>&1
     exit /b 1
 )
+
 del "%MANIFEST_ERROR%" >NUL 2>&1
 
 docker tag complaint-management-backend:%APP_VERSION% "%BACKEND_IMAGE%"
 if errorlevel 1 exit /b 1
+
 docker tag complaint-management-frontend:%APP_VERSION% "%FRONTEND_IMAGE%"
 if errorlevel 1 exit /b 1
+
 docker push "%BACKEND_IMAGE%"
 if errorlevel 1 exit /b 1
+
 docker push "%FRONTEND_IMAGE%"
 '''
                 }
