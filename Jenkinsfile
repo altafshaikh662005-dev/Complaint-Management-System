@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        APP_VERSION = '0.1.1'
+        APP_VERSION = '0.1.2'
         DOCKER_CONFIG = "${WORKSPACE}/.docker-ci-config-${BUILD_NUMBER}"
     }
 
