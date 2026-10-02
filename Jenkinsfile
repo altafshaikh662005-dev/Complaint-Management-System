@@ -296,7 +296,7 @@ echo ========================================
                         passwordVariable: 'DOCKERHUB_TOKEN'
                     ),
                     file(
-                        credentialsId: 'complaint-kubeconfig',
+                        credentialsId: 'complaint_kubeconfig',
                         variable: 'KUBECONFIG'
                     )
                 ]) {
@@ -357,7 +357,7 @@ if errorlevel 1 exit /b 1
                             passwordVariable: 'DOCKERHUB_TOKEN'
                         ),
                         file(
-                            credentialsId: 'complaint-kubeconfig',
+                            credentialsId: 'complaint_kubeconfig',
                             variable: 'KUBECONFIG'
                         )
                     ]) {
