@@ -151,7 +151,6 @@ if errorlevel 1 exit /b 1
 docker run --rm --volume "%WORKSPACE%:/scan" --volume trivy-cache:/root/.cache aquasec/trivy:0.75.0 image --input "/scan/trivy-frontend-%APP_VERSION%.tar" --scanners vuln --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL --no-progress --exit-code 0
 if errorlevel 1 exit /b 1
 '''
-                }
             }
         }
 
