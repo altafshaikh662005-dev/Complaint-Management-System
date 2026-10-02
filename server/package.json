@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
-    "test": "cross-env NODE_ENV=test MONGO_URI=mongodb://localhost:27017/complaint-management-system-test jest --runInBand --watch=false"
+    "test": "cross-env NODE_ENV=test MONGO_URI=mongodb://localhost:27017/complaint-management-system-test jest --runInBand --watch=false",
+    "test:ci": "cross-env NODE_ENV=test jest --runInBand --watch=false"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
