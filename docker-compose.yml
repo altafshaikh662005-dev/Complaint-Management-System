@@ -38,6 +38,10 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
+    networks:
+      default:
+        aliases:
+          - complaint-backend
 
   frontend:
     image: complaint-management-frontend:local

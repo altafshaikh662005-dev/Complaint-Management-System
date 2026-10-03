@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: complaint-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: complaint-backend
+  template:
+    metadata:
+      labels:
+        app: complaint-backend
+    spec:
+      containers:
+        - name: backend
+          image: complaint-management-backend:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          env:
+            - name: PORT
+              value: "5000"
+            - name: MONGO_URI
+              value: "mongodb://mongodb:27017/complaints"
+            - name: NODE_ENV
+              value: "production"
+            - name: ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: complaint-backend-admin
+                  key: ADMIN_EMAIL
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: complaint-backend-admin
+                  key: ADMIN_PASSWORD
+            - name: ADMIN_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: complaint-backend-admin
+                  key: ADMIN_NAME
+            - name: ADMIN_PHONE
+              valueFrom:
+                secretKeyRef:
+                  name: complaint-backend-admin
+                  key: ADMIN_PHONE
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 20
+            periodSeconds: 20
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: complaint-backend
+spec:
+  selector:
+    app: complaint-backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
